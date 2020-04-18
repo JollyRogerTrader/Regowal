@@ -4,6 +4,8 @@ Regowal is a theme generator for Regolith-linux
 
 https://regolith-linux.org/ /// https://github.com/regolith-linux
 
+Dependancies include <code>python 3.7</code> and <code>imagemagick</code>
+
 Regowal setup will create a directory ~/Regowal.To run setup, navigate to the directory where setup is in a terminal and run
 <code>python3 setup.py</code>
 
