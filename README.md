@@ -5,14 +5,13 @@ https://regolith-linux.org/ /// https://github.com/regolith-linux
 
 Dependancies include <code>python 3.7</code> and <code>imagemagick</code>
 
-<code>
-sudo apt install git imagemagick
-cd ~/Documents
-git clone https://github.com/JollyRogerTrader/Regowal.git
-cd Regowal
-python3 setup.py
-./regowal <full path to img>
-</code>
+<code>sudo apt install git imagemagick</code>
+<code>cd ~/Documents</code>
+<code>git clone https://github.com/JollyRogerTrader/Regowal.git</code>
+<code>cd Regowal</code>
+<code>python3 setup.py</code>
+<code>./regowal <full path to img></code>
+
 
 Regowal setup will create a directory ~/Regowal and point your ~/.Xresources-regolith to it.
 

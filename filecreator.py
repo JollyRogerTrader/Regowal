@@ -1,6 +1,6 @@
 import subprocess, os, re
 
-username = os.getlogin()
+username = os.environ.get('USER')
 
 
 def writeColorFile(dir):
@@ -34,8 +34,8 @@ def writeTypefacefile(dir):
 #define typeface_bar_glyph  Source Code Pro Medium 13
 #define typeface_wm         Source Code Pro Medium 13
 #define typeface_bar        pango:Source Code Pro Medium 13, Material Design Icons 13
-#define typeface_rofi       Source Code Pro Medium 18
-#define typeface_terminal   Source Code Pro:pixelsize=24:antialias=true:autohint=true
+#define typeface_rofi       Source Code Pro Medium 13
+#define typeface_terminal   Source Code Pro:pixelsize=18:antialias=true:autohint=true
 
 #define typeface_bar_glyph_wifi 
 #define typeface_bar_glyph_wired 

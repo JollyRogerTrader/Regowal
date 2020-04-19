@@ -1,7 +1,7 @@
 import subprocess, os, re
 import filecreator
 
-username = os.getlogin()
+username = os.environ.get('USER')
 
 
 def writefiles(dir):

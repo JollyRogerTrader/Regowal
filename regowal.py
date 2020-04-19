@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os, sys, time, subprocess, shutil
 
-username = os.getlogin()
+username = os.environ.get('USER')
 
 subprocess.call(["cp", "regowal.py", "regowal"])
 subprocess.call(["chmod", "+x", "regowal"])
