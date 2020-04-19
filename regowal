@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import os, sys, time, subprocess, shutil
+import os, sys, time, subprocess, shutil, random
 
-username = os.environ.get('USER')
+username = os.environ.get("USER")
 
 subprocess.call(["cp", "regowal.py", "regowal"])
 subprocess.call(["chmod", "+x", "regowal"])
@@ -29,6 +29,7 @@ def getColors(img):
 def saveColorCache(scheme):
     newScheme = ""
     scheme = scheme.split()
+    random.shuffle(scheme)
     for item in scheme:
         if len(item) == 7 and item[0] == "#":
             newScheme += item + "\n"
