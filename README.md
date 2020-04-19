@@ -30,7 +30,7 @@ Sometimes a manual <code>regolith-look refresh</code> is needed to fully update 
 
 Navigate to the directory where regowal is saved (~/Documents/Regowal/regowal)
 
-<code>./regowal <full path to img></code>
+<code>./regowal ~/full path to img</code>
 
 note: you do not need to run setup.py more than once or if you deleted the Regowal theme from your home directory.
 
