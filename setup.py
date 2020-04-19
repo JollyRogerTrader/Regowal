@@ -1,4 +1,4 @@
-import subprocess, os
+import subprocess, os, re
 
 username = os.getlogin()
 
@@ -366,7 +366,19 @@ Converting regowal.py to regowal and making it executable
 subprocess.call(["cp", "regowal.py", "regowal"])
 subprocess.call(["chmod", "+x", "regowal"])
 writefiles(newdirectory)
-
+with open("/home/" + username + "/.Xresources-regolith", "r") as xresfile:
+    newxresfile = ""
+    data = xresfile.readlines()
+    print(data)
+    for line in data:
+        print(line)
+        if line.find("root"):
+            line = (
+                '#include "/home/' + username + '/Regowal/styles/regowaltheme/root"\n'
+            )
+        newxresfile += line
+with open("/home/" + username + "/.Xresources-regolith", "w") as xresfile:
+    xresfile.writelines(newxresfile)
 print(
     """
 ----------------------------------------------------------

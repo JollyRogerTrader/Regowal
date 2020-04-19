@@ -78,7 +78,6 @@ def writeNewColorFile(newColors, oldColors):
     for line in oldColors:
         if len(line) > 2:
             line = line.split()
-            print(line)
             if line[1] == "color_base03":
                 line[2] = newColors[0]
             if line[1] == "color_base02":
@@ -128,8 +127,7 @@ else:
 
 homedir = os.path.expanduser("~")
 
-print("Are you sure you want to continue?")
-answer = input()
+answer = input("Are you sure you want to continue?   (y,N) ")
 if answer != "y":
     exitMessage()
 
@@ -166,8 +164,7 @@ setWallPaper(picture)
 ######################################################################
 # Command to refresh regolith-look
 ######################################################################
-print("Want to refresh regolith?   (y/N)")
-answer = input()
+answer = input("Want to refresh regolith?   (y/N) ")
 if answer != "y":
     exitMessage()
 else:
