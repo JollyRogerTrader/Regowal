@@ -1,11 +1,11 @@
 import subprocess, os, re
 import filecreator
 
-username = os.environ.get('USER')
+username = os.environ.get("USER")
 
 
 def writefiles(dir):
-    filecreator.writeColorFile(dir)
+    filecreator.writeColorfile(dir)
     filecreator.writeRofifile(dir)
     filecreator.writeRootfile(dir)
     filecreator.writeThemefile(dir)

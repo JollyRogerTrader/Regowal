@@ -1,28 +1,80 @@
 import subprocess, os, re
 
-username = os.environ.get('USER')
+username = os.environ.get("USER")
 
 
-def writeColorFile(dir):
+def writeColorfile(
+    dir,
+    c03="#2E3440",
+    c02="#3B4252",
+    c01="#434C5E",
+    c00="#7B8394",
+    c0="#D8DEE9",
+    c1="#E5E9F0",
+    c2="#ECEFF4",
+    c3="#ECEFF4",
+    cy="#EBCB8B",
+    co="#D08770",
+    cr="#BF616A",
+    cm="#5E81AC",
+    cv="#B48EAD",
+    cb="#81A1C1",
+    cc="#88C0D0",
+    cg="#A3BE8C",
+):
     with open(dir + "color", "w") as colorfile:
         print("Creating color")
-        colorfiledata = """#define color_base03   #2E3440
-#define color_base02   #3B4252
-#define color_base01   #434C5E
-#define color_base00   #7B8394
-#define color_base0    #D8DEE9
-#define color_base1    #E5E9F0
-#define color_base2    #ECEFF4
-#define color_base3    #ECEFF4
-#define color_yellow   #EBCB8B
-#define color_orange   #D08770
-#define color_red      #BF616A
-#define color_magenta  #5E81AC
-#define color_violet   #B48EAD
-#define color_blue     #81A1C1
-#define color_cyan     #88C0D0
-#define color_green    #A3BE8C
+        colorfiledata = (
+            """#define color_base03   """
+            + c03
+            + """
+#define color_base02   """
+            + c02
+            + """
+#define color_base01   """
+            + c01
+            + """
+#define color_base00   """
+            + c00
+            + """
+#define color_base0    """
+            + c0
+            + """
+#define color_base1    """
+            + c1
+            + """
+#define color_base2    """
+            + c2
+            + """
+#define color_base3    """
+            + c3
+            + """
+#define color_yellow   """
+            + cy
+            + """
+#define color_orange   """
+            + co
+            + """
+#define color_red      """
+            + cr
+            + """
+#define color_magenta  """
+            + cm
+            + """
+#define color_violet   """
+            + cv
+            + """
+#define color_blue     """
+            + cb
+            + """
+#define color_cyan     """
+            + cc
+            + """
+#define color_green    """
+            + cg
+            + """
 """
+        )
         colorfile.writelines(colorfiledata)
 
 
@@ -129,24 +181,60 @@ def writeRootfile(dir):
         rootfile.writelines(rootfiledata)
 
 
-def writeRofifile(dir):
+def writeRofifile(
+    dir,
+    blue="#81A1C1",
+    darkblue="#5E81AC",
+    cyan="#8FBCBB",
+    lightcyan="#88C0D0",
+    green="#A3BE8C",
+    red="#BF616A",
+    dark1="#2E3440",
+    dark2="#3B4252",
+    dark3="#434C5E",
+    dark4="#4C566A",
+    light1="#D8DEE9",
+):
     with open(dir + "rofi.rasi", "w") as rofifile:
         print("Creating rofi.rasi")
-        rofifiledata = """/* global settings and color variables */
+        rofifiledata = (
+            """/* global settings and color variables */
 * {
-   blue:             #81A1C1;
-   darkblue:         #5E81AC;
-   cyan:             #8FBCBB;
-   lightcyan:        #88C0D0;
-   green:            #A3BE8C;
-   red:              #BF616A;
+   blue:             """
+            + blue
+            + """;
+   darkblue:         """
+            + darkblue
+            + """;
+   cyan:             """
+            + cyan
+            + """;
+   lightcyan:        """
+            + lightcyan
+            + """;
+   green:            """
+            + green
+            + """;
+   red:              """
+            + red
+            + """;
 
-   dark1:            #2E3440;
-   dark2:            #3B4252;
-   dark3:            #434C5E;
-   dark4:            #4C566A;
+   dark1:            """
+            + dark1
+            + """;
+   dark2:            """
+            + dark2
+            + """;
+   dark3:            """
+            + dark3
+            + """;
+   dark4:            """
+            + dark4
+            + """;
 
-   light1:           #D8DEE9;
+   light1:           """
+            + light1
+            + """;
 
    background-color: @dark1;
    border-color:     @dark2;
@@ -294,4 +382,5 @@ case-indicator {
     text-color: @highlight;
     background-color:@background-color;
 }"""
+        )
         rofifile.writelines(rofifiledata)
