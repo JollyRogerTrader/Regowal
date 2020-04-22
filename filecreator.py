@@ -3,10 +3,10 @@ import subprocess, os, re
 # This is just a collection of functions to write file using a template system.
 # Do not edit this unless you are careful with how the file is formated when it is written
 
-username = os.environ.get("USER")
+user_name = os.environ.get("USER")
 
 
-def writeColorfile(
+def write_color_file(
     dir,
     c03="#2E3440",
     c02="#3B4252",
@@ -25,9 +25,9 @@ def writeColorfile(
     cc="#88C0D0",
     cg="#A3BE8C",
 ):
-    with open(dir + "color", "w") as colorfile:
+    with open(dir + "color", "w") as color_file:
         print("Creating color")
-        colorfiledata = (
+        color_file_data = (
             """#define color_base03   """
             + c03
             + """
@@ -78,13 +78,13 @@ def writeColorfile(
             + """
 """
         )
-        colorfile.writelines(colorfiledata)
+        color_file.writelines(color_file_data)
 
 
-def writeTypefacefile(dir):
-    with open(dir + "typeface", "w") as typefacefile:
+def write_typeface_file(dir):
+    with open(dir + "typeface", "w") as typeface_file:
         print("Creating typeface")
-        typefacefiledata = """
+        typeface_file_data = """
 ! Typeface: Source Code Pro
 #define typeface_bar_glyph  Source Code Pro Medium 13
 #define typeface_wm         Source Code Pro Medium 13
@@ -128,19 +128,19 @@ def writeTypefacefile(dir):
 #define typeface_bar_glyph_numlock 
 #define typeface_bar_glyph_capslock 
 """
-        typefacefile.writelines(typefacefiledata)
+        typeface_file.writelines(typeface_file_data)
 
 
-def writeThemefile(dir):
-    with open(dir + "theme", "w") as themefile:
+def write_theme_file(dir):
+    with open(dir + "theme", "w") as theme_file:
         print("Creating theme")
-        themefiledata = (
+        theme_file_data = (
             """
 #define gtk_theme           Adwaita
 #define icon_theme          Paper
 #define desktop_wallpaper   /usr/share/backgrounds/regolith-structure-7.png
 #define rofi_theme          /home/"""
-            + username
+            + user_name
             + """/.regowal/styles/regowaltheme/rofi.rasi
 
 #define i3wm_window_border_size         1
@@ -150,26 +150,26 @@ def writeThemefile(dir):
 #define i3wm_bar_position         bottom
 """
         )
-        themefile.writelines(themefiledata)
+        theme_file.writelines(theme_file_data)
 
 
-def writeRootfile(dir):
-    with open(dir + "root", "w") as rootfile:
+def write_root_file(dir):
+    with open(dir + "root", "w") as root_file:
         print("Creating root")
-        rootfiledata = (
+        root_file_data = (
             """! -- Styles - Colors
 #include "/home/"""
-            + username
+            + user_name
             + """/.regowal/styles/regowaltheme/color"
 
 ! -- Styles - Fonts
 #include "/home/"""
-            + username
+            + user_name
             + """/.regowal/styles/regowaltheme/typeface"
 
 ! -- Styles - Theme
 #include "/home/"""
-            + username
+            + user_name
             + """/.regowal/styles/regowaltheme/theme"
 
 ! -- Applications
@@ -181,10 +181,10 @@ def writeRootfile(dir):
 #include "/etc/regolith/styles/gnome"
 """
         )
-        rootfile.writelines(rootfiledata)
+        root_file.writelines(root_file_data)
 
 
-def writeRofifile(
+def write_rofi_file(
     dir,
     blue="#81A1C1",
     darkblue="#5E81AC",
@@ -198,9 +198,9 @@ def writeRofifile(
     dark4="#4C566A",
     light1="#D8DEE9",
 ):
-    with open(dir + "rofi.rasi", "w") as rofifile:
+    with open(dir + "rofi.rasi", "w") as rofi_file:
         print("Creating rofi.rasi")
-        rofifiledata = (
+        rofi_file_data = (
             """/* global settings and color variables */
 * {
    blue:             """
@@ -386,4 +386,4 @@ case-indicator {
     background-color:@background-color;
 }"""
         )
-        rofifile.writelines(rofifiledata)
+        rofi_file.writelines(rofi_file_data)

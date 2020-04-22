@@ -1,15 +1,15 @@
 import subprocess, os, re
 import filecreator
 
-username = os.environ.get("USER")
+user_name = os.environ.get("USER")
 
 
-def writefiles(dir):
-    filecreator.writeColorfile(dir)
-    filecreator.writeRofifile(dir)
-    filecreator.writeRootfile(dir)
-    filecreator.writeThemefile(dir)
-    filecreator.writeTypefacefile(dir)
+def write_files(dir):
+    filecreator.write_color_file(dir)
+    filecreator.write_rofi_file(dir)
+    filecreator.write_root_file(dir)
+    filecreator.write_theme_file(dir)
+    filecreator.write_typeface_file(dir)
 
 
 print(
@@ -69,17 +69,17 @@ if ans != "y":
     exit()
 try:
     print("Creating needed directories.")
-    command = subprocess.call(["mkdir", str("/home/" + username + "/.regowal/")])
+    command = subprocess.call(["mkdir", str("/home/" + user_name + "/.regowal/")])
     if command == 0:
-        print("Directory created at /home/" + username + "/.regowal/")
+        print("Directory created at /home/" + user_name + "/.regowal/")
         command = subprocess.call(
-            ["mkdir", str("/home/" + username + "/.regowal/styles/")]
+            ["mkdir", str("/home/" + user_name + "/.regowal/styles/")]
         )
         command = subprocess.call(
-            ["mkdir", str("/home/" + username + "/.regowal/styles/regowaltheme/")]
+            ["mkdir", str("/home/" + user_name + "/.regowal/styles/regowaltheme/")]
         )
         if command == 0:
-            print("Directory created at /home/" + username + "/.regowal/styles/")
+            print("Directory created at /home/" + user_name + "/.regowal/styles/")
 
     else:
         print()
@@ -90,34 +90,34 @@ except:
     )
 
 
-newdirectory = "/home/" + username + "/.regowal/styles/regowaltheme/"
+new_directory = "/home/" + user_name + "/.regowal/styles/regowaltheme/"
 
 # writing template files
-writefiles(newdirectory)
-xrescommand = None
+write_files(new_directory)
+xres_command = None
 
 try:
-    xrescommand = subprocess.check_output(
-        ["cat", "/home/" + username + "/.Xresources-regolith"]
+    xres_command = subprocess.check_output(
+        ["cat", "/home/" + user_name + "/.Xresources-regolith"]
     )
 except:
     print("Did not find a Xresources-regolith file")
 
-if len(str(xrescommand).split("\n")) > 1:
+if len(str(xres_command).split("\n")) > 1:
     print(
         ".Xresources-regolith has been customized with additional settings - editing will have to be done manually"
     )
     print(
         "modify .Xresources-regolith to read: "
         + '#include "/home/'
-        + username
+        + user_name
         + '/.regowal/styles/regowaltheme/root"\n'
     )
 else:
     try:
-        with open("/home/" + username + "/.Xresources-regolith", "w") as xresfile:
-            xresfile.write(
-                '#include "/home/' + username + '/.regowal/styles/regowaltheme/root"\n'
+        with open("/home/" + user_name + "/.Xresources-regolith", "w") as xres_file:
+            xres_file.write(
+                '#include "/home/' + user_name + '/.regowal/styles/regowaltheme/root"\n'
             )
     except:
         print("Could not write Xresources-regolith file")
