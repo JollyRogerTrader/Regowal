@@ -59,28 +59,69 @@ Welcome to Regowal setup
 ------------------------
 """
 )
-ans = input("Do you want to create a standalone theme for regowal? (y,N)?   ")
+print(
+    """
+This script will modify your system to use Regowal. Please visit https://github.com/JollyRogerTrader/Regowal to find support and feel free to report bugs.
+"""
+)
+ans = input("Are you sure you want to continue?   [y/n]?")
 if ans != "y":
-    print("Dont forget to pass the theme you want to edit when calling ./regowal")
-    print("*note editing theme colors is permanent (recommend having standalone theme)")
-else:
-    command = subprocess.call(["mkdir", str("/home/" + username + "/Regowal/")])
+    exit()
+try:
+    print("Creating needed directories.")
+    command = subprocess.call(["mkdir", str("/home/" + username + "/.regowal/")])
     if command == 0:
-        print("Directory created at /home/" + username + "/etc/Regowal/")
+        print("Directory created at /home/" + username + "/.regowal/")
         command = subprocess.call(
-            ["mkdir", str("/home/" + username + "/Regowal/styles/")]
+            ["mkdir", str("/home/" + username + "/.regowal/styles/")]
         )
         command = subprocess.call(
-            ["mkdir", str("/home/" + username + "/Regowal/styles/regowaltheme/")]
+            ["mkdir", str("/home/" + username + "/.regowal/styles/regowaltheme/")]
         )
         if command == 0:
-            print("Directory created at /home/" + username + "/etc/Regowal/styles/")
+            print("Directory created at /home/" + username + "/.regowal/styles/")
 
     else:
-        print("***")
-        print("Failed to make the Regowal directory - it might already be created")
-        print("***")
-newdirectory = "/home/" + username + "/Regowal/styles/regowaltheme/"
+        print()
+
+except:
+    print(
+        "Error creating directories - this is probably a bug and should be reported to https://github.com/JollyRogerTrader/Regowal"
+    )
+
+
+newdirectory = "/home/" + username + "/.regowal/styles/regowaltheme/"
+
+# writing template files
+writefiles(newdirectory)
+xrescommand = None
+
+try:
+    xrescommand = subprocess.check_output(
+        ["cat", "/home/" + username + "/.Xresources-regolith"]
+    )
+except:
+    print("Did not find a Xresources-regolith file")
+
+if len(str(xrescommand).split("\n")) > 1:
+    print(
+        ".Xresources-regolith has been customized with additional settings - editing will have to be done manually"
+    )
+    print(
+        "modify .Xresources-regolith to read: "
+        + '#include "/home/'
+        + username
+        + '/.regowal/styles/regowaltheme/root"\n'
+    )
+else:
+    try:
+        with open("/home/" + username + "/.Xresources-regolith", "w") as xresfile:
+            xresfile.write(
+                '#include "/home/' + username + '/.regowal/styles/regowaltheme/root"\n'
+            )
+    except:
+        print("Could not write Xresources-regolith file")
+
 print(
     """
 Converting regowal.py to regowal and making it executable
@@ -90,18 +131,6 @@ Converting regowal.py to regowal and making it executable
 # making regowal executable
 subprocess.call(["cp", "regowal.py", "regowal"])
 subprocess.call(["chmod", "+x", "regowal"])
-
-# writing template files
-writefiles(newdirectory)
-# os.system("touch ~/.Xresources-regolith")
-
-try:
-    with open("/home/" + username + "/.Xresources-regolith", "w") as xresfile:
-        xresfile.write(
-            '#include "/home/' + username + '/Regowal/styles/regowaltheme/root"\n'
-        )
-except:
-    print("Could not write Xresources-regolith file")
 
 print(
     """

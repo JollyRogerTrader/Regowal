@@ -1,5 +1,8 @@
 import subprocess, os, re
 
+# This is just a collection of functions to write file using a template system.
+# Do not edit this unless you are careful with how the file is formated when it is written
+
 username = os.environ.get("USER")
 
 
@@ -138,7 +141,7 @@ def writeThemefile(dir):
 #define desktop_wallpaper   /usr/share/backgrounds/regolith-structure-7.png
 #define rofi_theme          /home/"""
             + username
-            + """/Regowal/styles/regowaltheme/rofi.rasi
+            + """/.regowal/styles/regowaltheme/rofi.rasi
 
 #define i3wm_window_border_size         1
 #define i3wm_floatingwindow_border_size 1
@@ -157,17 +160,17 @@ def writeRootfile(dir):
             """! -- Styles - Colors
 #include "/home/"""
             + username
-            + """/Regowal/styles/regowaltheme/color"
+            + """/.regowal/styles/regowaltheme/color"
 
 ! -- Styles - Fonts
 #include "/home/"""
             + username
-            + """/Regowal/styles/regowaltheme/typeface"
+            + """/.regowal/styles/regowaltheme/typeface"
 
 ! -- Styles - Theme
 #include "/home/"""
             + username
-            + """/Regowal/styles/regowaltheme/theme"
+            + """/.regowal/styles/regowaltheme/theme"
 
 ! -- Applications
 ! These files map values defined above into specific app settings.

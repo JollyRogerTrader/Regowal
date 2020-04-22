@@ -2,10 +2,7 @@
 import os, sys, time, subprocess, shutil, random, filecreator
 
 username = os.environ.get("USER")
-
-subprocess.call(["cp", "regowal.py", "regowal"])
-subprocess.call(["chmod", "+x", "regowal"])
-
+themeFileLocation = ""
 
 # Helper functions
 def exitMessage():
@@ -20,28 +17,29 @@ def listToString(s):
 
 # Function to call "convert" and generate color pallete
 def getColors(img):
+    print("Generating colors... This might take awhile")
     flags = ["-resize", "25%", "-colors", str(16), "-unique-colors", "txt:-"]
     img += "[0]"
     return subprocess.check_output(["convert", img, *flags]).splitlines()
 
 
-# Saves the new color scheme to a file in ~/Regowal/styles/regowaltheme for safe keeping
+# Saves the new color scheme to a file in ~/.regowal/styles/regowaltheme for safe keeping
 def saveColorCache(scheme):
-    newScheme = ""
-    scheme = scheme.split()
-    random.shuffle(scheme)
-    for item in scheme:
-        if len(item) == 7 and item[0] == "#":
-            newScheme += item + "\n"
-    # with open("/home/" + username + "/Regowal/styles/walscheme", "w") as file:
-    #     file.writelines(newScheme)
-    # writeNewColorFile(newScheme, oldColors)
-    newScheme = newScheme.split()
+    newS = []  # new array to store hex colors
+    scheme = scheme.split()  # split the "dirty list"
+    for item in scheme:  # cycle through array items
+        if len(item) == 7 and item[0] == "#":  # indexed item matches a hex color
+            newS.append(item)  # append to list
+        # send list to be brighten/darkened
+    newScheme = sorted(newS)
     filecreator.writeColorfile(
-        "/home/" + username + "/Regowal/styles/regowaltheme/",
+        "/home/" + username + "/.regowal/styles/regowaltheme/",
         newScheme[0],
-        newScheme[1],
+        newScheme[15],
         newScheme[2],
+        newScheme[13],
+        newScheme[14],
+        newScheme[15],
         newScheme[3],
         newScheme[4],
         newScheme[5],
@@ -52,52 +50,48 @@ def saveColorCache(scheme):
         newScheme[10],
         newScheme[11],
         newScheme[12],
-        newScheme[13],
-        newScheme[14],
-        newScheme[15],
     )
     filecreator.writeRofifile(
-        "/home/" + username + "/Regowal/styles/regowaltheme/",
-        newScheme[0],
-        newScheme[1],
-        newScheme[2],
-        newScheme[3],
+        "/home/" + username + "/.regowal/styles/regowaltheme/",
+        newScheme[13],
+        newScheme[14],
+        newScheme[14],
         newScheme[4],
-        newScheme[5],
-        newScheme[6],
-        newScheme[7],
-        newScheme[8],
-        newScheme[9],
+        newScheme[15],
         newScheme[10],
+        newScheme[0],
+        newScheme[14],
+        newScheme[2],
+        newScheme[14],
+        newScheme[14],
     )
 
 
-# Sets the wallpaper in theme specified and copies it to ~/Regowal/styles/regowaltheme/wallpaper for safe keeping
+# Sets the wallpaper in theme specified and copies it to ~/.regowal/styles/regowaltheme/wallpaper for safe keeping
 def setWallPaper(picDir):
-    print("setting wallpaper...")
     command = subprocess.call(
         [
             "cp",
             str(picDir),
-            str("/home/" + username + "/Regowal/styles/regowaltheme/wallpaper"),
+            str("/home/" + username + "/.regowal/styles/regowaltheme/wallpaper"),
         ]
     )
     with open(
-        "/home/" + username + "/Regowal/styles/regowaltheme/theme", "r"
+        "/home/" + username + "/.regowal/styles/regowaltheme/theme", "r"
     ) as themesettings:
         newTheme = ""
-        print("found theme")
         for line in themesettings:
             line = line.split()
             if len(line) > 0 and line[1] == "desktop_wallpaper":
-                print("found wallpaper settings and changing")
-                line[2] = "/home/" + username + "/Regowal/styles/regowaltheme/wallpaper"
+                line[2] = (
+                    "/home/" + username + "/.regowal/styles/regowaltheme/wallpaper"
+                )
             if len(line) == 3:
                 newTheme += (
                     str(line[0]) + " " + str(line[1]) + " " + str(line[2]) + "\n"
                 )
     with open(
-        "/home/" + username + "/Regowal/styles/regowaltheme/theme", "w"
+        "/home/" + username + "/.regowal/styles/regowaltheme/theme", "w"
     ) as writefile:
         writefile.writelines(newTheme)
 
@@ -118,9 +112,9 @@ def writeNewColorFile(newColors, oldColors):
             if line[1] == "color_base00":
                 line[2] = newColors[3].strip("\n")
             if line[1] == "color_base0":
-                line[2] = newColors[4].strip("\n")
+                line[2] = newColors[14].strip("\n")
             if line[1] == "color_base1":
-                line[2] = newColors[5].strip("\n")
+                line[2] = newColors[14].strip("\n")
             if line[1] == "color_base2":
                 line[2] = newColors[6].strip("\n")
             if line[1] == "color_base3":
@@ -146,51 +140,57 @@ def writeNewColorFile(newColors, oldColors):
         file.writelines(newColorFile)
 
 
-# pull args to identify the image selected
-if len(sys.argv) > 1:
-    image = sys.argv[1]
-else:
-    print(
-        "No image is selected - using cached scheme in /home/"
-        + username
-        + "/Regowal/styles/"
-    )
-    image = None
+def main():
 
-# Confirm the user wants to proceed
-answer = input("Are you sure you want to continue?   (y,N) ")
-if answer != "y":
+    # pull args to identify the image selected
+    if len(sys.argv) > 1:
+        image = sys.argv[1]
+    else:
+        print(
+            "No image is selected - using cached scheme in /home/"
+            + username
+            + "/.regowal/styles/"
+        )
+        image = None
+
+    # Confirm the user wants to proceed
+    answer = input("Are you sure you want to continue?   (y,N) ")
+    if answer != "y":
+        exitMessage()
+
+    # Opening theme file to retrieve data
+    themeFileLocation = "/home/" + username + "/.regowal/styles/regowaltheme/color"
+    try:
+        with open(themeFileLocation, "r") as themeFile:
+            oldColors = themeFile.readlines()
+    except:
+        print(
+            "No color file found with "
+            + themeFileLocation
+            + ". Verify you spelled it correctly"
+        )
+        exitMessage()
+
+    # Call function to get color palette and save
+    if image != None:
+        colors = getColors(image)
+        saveColorCache(str(colors))
+    else:
+        colors = oldColors
+
+    # Call function to set wallpaper from passed picture
+    setWallPaper(image)
+
+    # Command to refresh regolith-look
+    answer = input("Want to refresh regolith?   (y/N) ")
+    if answer != "y":
+        exitMessage()
+    else:
+        print("Refreshing Regolith")
+        subprocess.check_output(["regolith-look", "refresh"])
+
     exitMessage()
 
-# Opening theme file to retrieve data
-themeFileLocation = "/home/" + username + "/Regowal/styles/regowaltheme/color"
-try:
-    with open(themeFileLocation, "r") as themeFile:
-        oldColors = themeFile.readlines()
-except:
-    print(
-        "No color file found with "
-        + themeFileLocation
-        + ". Verify you spelled it correctly"
-    )
-    exitMessage()
 
-# Call function to get color palette and save
-if image != None:
-    colors = getColors(image)
-    saveColorCache(str(colors))
-else:
-    colors = oldColors
-
-# Call function to set wallpaper from passed picture
-setWallPaper(image)
-
-# Command to refresh regolith-look
-answer = input("Want to refresh regolith?   (y/N) ")
-if answer != "y":
-    exitMessage()
-else:
-    print("refreshing regolith")
-    subprocess.check_output(["regolith-look", "refresh"])
-
-exitMessage()
+if __name__ == "__main__":
+    main()
