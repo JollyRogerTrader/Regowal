@@ -31,13 +31,13 @@ Navigate to the directory where regowal is saved (~/Documents/Regowal)
 
 <code>./regowal ~/full path to img</code>
 
-note: you do not need to run setup.py more than once or if you deleted the Regowal theme from your home directory.
+note: you do not need to run setup.py more than once or if you deleted the .regowal theme from your home directory.
 
-<bold>HOW TO RESET</bold>
+<bold>HOW TO SWAP TO DEFUALT THEME</bold>
 
 <code>regolith-look set cahuella && regolith-look refresh</code>
 
-currently Regowal is only updating i3 colors. Rofi + GTK colors are in progress. If your ~/.Xresources-regolith has additional settings then ensure you have a backup prior to running <code>python3 setup.py</code> this script is still in development and something might break. you can backup your .Xresources-regolith file with <code>cp ~/.Xresources-regolith .Xresources-regolith.bk</code>
+currently Regowal is only updating i3 and Rofi colors. GTK color theming is in progress. If your ~/.Xresources-regolith has additional settings then ensure you have a backup prior to running <code>python3 setup.py</code> this script is still in development and something might break. you can backup your .Xresources-regolith file with <code>cp ~/.Xresources-regolith .Xresources-regolith.bk</code>
 
 ![Regowal example1](Desktop.png)
 ![Regowal example2](Desktop1.png)
