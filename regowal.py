@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import os, sys, time, subprocess, shutil, random, filecreator
+import os, sys, subprocess, filecreator, argparse
+from PIL import Image
+from collections import Counter
 
-user_name = os.environ.get("USER")
-theme_file_location = ""
+USER_NAME = os.environ.get("USER")
 
 # Helper functions
 def exit_message():
@@ -10,61 +11,126 @@ def exit_message():
     exit()
 
 
+def rgb2hex(r, g, b):
+    return "#{:02x}{:02x}{:02x}".format(r, g, b)
+
+
 def list_to_string(s):
     strr = " "
     return strr.join(s)
 
 
-# Function to call "convert" and generate color pallete
-def get_colors(img):
+def getnum(num):
+    count = 0
+    for i in num:
+        if i != "#":
+            if i == "f" or i == "F":
+                count += 15
+            elif i == "e" or i == "E":
+                count += 14
+            elif i == "d" or i == "D":
+                count += 13
+            elif i == "c" or i == "C":
+                count += 12
+            elif i == "b" or i == "B":
+                count += 11
+            elif i == "a" or i == "A":
+                count += 10
+            else:
+                count += int(i)
+    return count
+
+
+def get_imcolors(image):
+    picarray = []
     print("Generating colors... This might take awhile")
     flags = ["-resize", "25%", "-colors", str(16), "-unique-colors", "txt:-"]
-    img += "[0]"
-    return subprocess.check_output(["convert", img, *flags]).splitlines()
+    imcolors = subprocess.check_output(["convert", image, *flags]).splitlines()
+    imcolors = str(imcolors).split()
+    for item in imcolors:
+        if item[0] == "#" and len(item) == 7:
+            picarray.append(item)
+    finaltups, out = [], []  # make a holding dict and final array
+    for value in picarray:
+        finaltups.append((getnum(value), value))  # make tuples and add to list
+    sorted(finaltups, reverse=True)  # return tuple list sorted
+    for i in finaltups:
+        out.append(i[1])
+    return out
+
+
+# Get hex values for pixels in image
+def get_pycolors(image):
+    pic = Image.open(image)
+    nwidth, nheight = 4, 4  # scale image to required 16 pixels
+    pic1 = pic.resize((nwidth, nheight))
+    picarray = []
+    for x in range(nwidth):
+        for y in range(nheight):
+            value = pic1.getpixel((x, y))
+            picarray.append(rgb2hex(value[0], value[1], value[2]))
+    finaltups, out = [], []  # make a holding dict and final array
+    for value in picarray:
+        finaltups.append((getnum(value), value))  # make tuples and add to list
+    sorted(finaltups, reverse=True)  # return tuple list sorted
+    for i in finaltups:
+        out.append(i[1])
+    return out
+
+
+def most_prominent(colorlist):
+    dict = {}
+    top_count = 0
+    top_colors = []
+    for item in colorlist:
+        dict[item] = dict.get(item, 0) + 1
+        if dict[item] > top_count:
+            top_count = dict[item]
+    for key, value in sorted(dict.items(), key=lambda item: item[1], reverse=True):
+        top_colors.append(key)
+    return top_colors
 
 
 # Saves the new color scheme to a file in ~/.regowal/styles/regowaltheme for safe keeping
-def save_color_cache(scheme):
-    new = []  # new array to store hex colors
-    scheme = scheme.split()  # split the "dirty list"
-    for item in scheme:  # cycle through array items
-        if len(item) == 7 and item[0] == "#":  # indexed item matches a hex color
-            new.append(item)  # append to list
-        # send list to be brighten/darkened
-    new_scheme = sorted(new)
-    filecreator.write_color_file(
-        "/home/" + user_name + "/.regowal/styles/regowaltheme/",
-        new_scheme[0],
-        new_scheme[15],
-        new_scheme[2],
-        new_scheme[13],
-        new_scheme[14],
-        new_scheme[15],
-        new_scheme[3],
-        new_scheme[4],
-        new_scheme[5],
-        new_scheme[6],
-        new_scheme[7],
-        new_scheme[8],
-        new_scheme[9],
-        new_scheme[10],
-        new_scheme[11],
-        new_scheme[12],
-    )
-    filecreator.write_rofi_file(
-        "/home/" + user_name + "/.regowal/styles/regowaltheme/",
-        new_scheme[13],
-        new_scheme[14],
-        new_scheme[14],
-        new_scheme[4],
-        new_scheme[15],
-        new_scheme[10],
-        new_scheme[0],
-        new_scheme[14],
-        new_scheme[2],
-        new_scheme[14],
-        new_scheme[14],
-    )
+def save_color_theme(scheme):
+    if len(scheme) >= 16:
+        filecreator.write_color_file(
+            "/home/" + USER_NAME + "/.regowal/styles/regowaltheme/",
+            scheme[0],  # background
+            scheme[15],  # i3bar main text
+            scheme[0],
+            scheme[15],  # number workspace text color
+            scheme[15],  # i3bar
+            scheme[15],  # i3bar
+            scheme[2],
+            scheme[3],
+            scheme[13],  # files in ranger
+            scheme[12],
+            scheme[11],  # exec in ranger
+            scheme[9],
+            scheme[10],
+            scheme[11],
+            scheme[12],
+            scheme[13],  # terminal text color
+        )
+        filecreator.write_rofi_file(
+            "/home/" + USER_NAME + "/.regowal/styles/regowaltheme/",
+            scheme[15],
+            scheme[15],
+            scheme[10],
+            scheme[0],
+            scheme[1],
+            scheme[3],
+            scheme[0],
+            scheme[15],  # highlighter color
+            scheme[2],
+            scheme[15],
+            scheme[15],
+        )
+    else:
+        print(
+            "Not enough colors detected, this happens when there isnt enough colors in the image selected"
+        )
 
 
 # Sets the wallpaper in theme specified and copies it to ~/.regowal/styles/regowaltheme/wallpaper for safe keeping
@@ -73,121 +139,80 @@ def set_wall_paper(pic_dir):
         [
             "cp",
             str(pic_dir),
-            str("/home/" + user_name + "/.regowal/styles/regowaltheme/wallpaper"),
+            str("/home/" + USER_NAME + "/.regowal/styles/regowaltheme/wallpaper"),
         ]
     )
     with open(
-        "/home/" + user_name + "/.regowal/styles/regowaltheme/theme", "r"
+        "/home/" + USER_NAME + "/.regowal/styles/regowaltheme/theme", "r"
     ) as theme_settings:
         new_theme = ""
         for line in theme_settings:
             line = line.split()
             if len(line) > 0 and line[1] == "desktop_wallpaper":
                 line[2] = (
-                    "/home/" + user_name + "/.regowal/styles/regowaltheme/wallpaper"
+                    "/home/" + USER_NAME + "/.regowal/styles/regowaltheme/wallpaper"
                 )
             if len(line) == 3:
                 new_theme += (
                     str(line[0]) + " " + str(line[1]) + " " + str(line[2]) + "\n"
                 )
     with open(
-        "/home/" + user_name + "/.regowal/styles/regowaltheme/theme", "w"
+        "/home/" + USER_NAME + "/.regowal/styles/regowaltheme/theme", "w"
     ) as write_file:
         write_file.writelines(new_theme)
 
 
-# writes the color theme in the theme specified in the arguments
-def write_new_color_file(new_colors, old_colors):
-    new_colors = new_colors.split()
-    new_color_file = ""
-    for line in old_colors:
-        if len(line) > 2:
-            line = line.split()
-            if line[1] == "color_base03":
-                line[2] = new_colors[0]
-            if line[1] == "color_base02":
-                line[2] = new_colors[1].strip("\n")
-            if line[1] == "color_base01":
-                line[2] = new_colors[2].strip("\n")
-            if line[1] == "color_base00":
-                line[2] = new_colors[3].strip("\n")
-            if line[1] == "color_base0":
-                line[2] = new_colors[14].strip("\n")
-            if line[1] == "color_base1":
-                line[2] = new_colors[14].strip("\n")
-            if line[1] == "color_base2":
-                line[2] = new_colors[6].strip("\n")
-            if line[1] == "color_base3":
-                line[2] = new_colors[7].strip("\n")
-            if line[1] == "color_yellow":
-                line[2] = new_colors[8].strip("\n")
-            if line[1] == "color_orange":
-                line[2] = new_colors[9].strip("\n")
-            if line[1] == "color_red":
-                line[2] = new_colors[10].strip("\n")
-            if line[1] == "color_magenta":
-                line[2] = new_colors[11].strip("\n")
-            if line[1] == "color_violet":
-                line[2] = new_colors[12].strip("\n")
-            if line[1] == "color_blue":
-                line[2] = new_colors[13].strip("\n")
-            if line[1] == "color_cyan":
-                line[2] = new_colors[14].strip("\n")
-            if line[1] == "color_green":
-                line[2] = new_colors[15].strip("\n")
-            new_color_file += str(line[0] + "  " + line[1] + "  " + line[2] + "\n")
-    with open(theme_file_location, "w+") as file:
-        file.writelines(new_color_file)
-
-
 def main():
+    THEME_FILE_LOCATION = ""
+    IMAGE = ""
+    LIGHTMODE = False
+    ONLYALT = False
 
-    # pull args to identify the image selected
-    if len(sys.argv) > 1:
-        image = sys.argv[1]
+    # parse arguments sent
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-light", action="store_true", help="sets the color scheme to light mode",
+    )
+    parser.add_argument(
+        "-alt",
+        action="store_true",
+        help="only use alternate means to generate colors (normally faster but can produce odd results",
+    )
+    parser.add_argument(
+        "image",
+        help="full path to image you want to use as your wallpaper and color scheme",
+    )
+
+    args = parser.parse_args()
+    if args.light:
+        LIGHTMODE = True
+    if args.alt:
+        ONLYALT = True
+    if args.image:
+        IMAGE = args.image
+
+    if ONLYALT:
+        colors = get_pycolors(IMAGE)
     else:
-        print(
-            "No image is selected - using cached scheme in /home/"
-            + user_name
-            + "/.regowal/styles/"
-        )
-        image = None
+        colors = get_imcolors(IMAGE)
+        if len(colors) < 16:
+            print(
+                "Not enough colors generated with ImageMagick - trying alternate means"
+            )
+            colors = get_pycolors(IMAGE)
 
-    # Confirm the user wants to proceed
-    answer = input("Are you sure you want to continue?   (y,N) ")
-    if answer != "y":
-        exit_message()
-
-    # Opening theme file to retrieve data
-    theme_file_location = "/home/" + user_name + "/.regowal/styles/regowaltheme/color"
-    try:
-        with open(theme_file_location, "r") as theme_File:
-            old_colors = theme_File.readlines()
-    except:
-        print(
-            "No color file found with "
-            + theme_file_location
-            + ". Verify you spelled it correctly"
-        )
-        exit_message()
-
-    # Call function to get color palette and save
-    if image != None:
-        colors = get_colors(image)
-        save_color_cache(str(colors))
+    if LIGHTMODE:
+        print("Generating light mode")
+        save_color_theme(sorted(colors, reverse=True))
     else:
-        colors = old_colors
+        save_color_theme(sorted(colors))
 
     # Call function to set wallpaper from passed picture
-    set_wall_paper(image)
+    set_wall_paper(IMAGE)
 
     # Command to refresh regolith-look
-    answer = input("Want to refresh regolith?   (y/N) ")
-    if answer != "y":
-        exit_message()
-    else:
-        print("Refreshing Regolith")
-        subprocess.check_output(["regolith-look", "refresh"])
+    print("Refreshing Regolith")
+    subprocess.check_output(["regolith-look", "refresh"])
 
     exit_message()
 

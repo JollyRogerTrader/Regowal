@@ -2,6 +2,8 @@ import subprocess, os, re
 import filecreator
 
 user_name = os.environ.get("USER")
+HOME_DIR = "/home/" + user_name
+NEW_DIR = HOME_DIR + "/.regowal/styles/regowaltheme/"
 
 
 def write_files(dir):
@@ -69,17 +71,15 @@ if ans != "y":
     exit()
 try:
     print("Creating needed directories.")
-    command = subprocess.call(["mkdir", str("/home/" + user_name + "/.regowal/")])
+    command = subprocess.call(["mkdir", str(HOME_DIR + "/.regowal/")])
     if command == 0:
-        print("Directory created at /home/" + user_name + "/.regowal/")
+        print("Directory created at " + HOME_DIR + "/.regowal/")
+        command = subprocess.call(["mkdir", str(HOME_DIR + "/.regowal/styles/")])
         command = subprocess.call(
-            ["mkdir", str("/home/" + user_name + "/.regowal/styles/")]
-        )
-        command = subprocess.call(
-            ["mkdir", str("/home/" + user_name + "/.regowal/styles/regowaltheme/")]
+            ["mkdir", str(HOME_DIR + "/.regowal/styles/regowaltheme/")]
         )
         if command == 0:
-            print("Directory created at /home/" + user_name + "/.regowal/styles/")
+            print("Directory created at " + HOME_DIR + "/.regowal/styles/")
 
     else:
         print()
@@ -89,17 +89,12 @@ except:
         "Error creating directories - this is probably a bug and should be reported to https://github.com/JollyRogerTrader/Regowal"
     )
 
-
-new_directory = "/home/" + user_name + "/.regowal/styles/regowaltheme/"
-
 # writing template files
-write_files(new_directory)
+write_files(NEW_DIR)
 xres_command = None
 
 try:
-    xres_command = subprocess.check_output(
-        ["cat", "/home/" + user_name + "/.Xresources-regolith"]
-    )
+    xres_command = subprocess.check_output(["cat", HOME_DIR + "/.Xresources-regolith"])
 except:
     print("Did not find a Xresources-regolith file")
 
@@ -115,27 +110,34 @@ if len(str(xres_command).split("\n")) > 1:
     )
 else:
     try:
-        with open("/home/" + user_name + "/.Xresources-regolith", "w") as xres_file:
+        with open(HOME_DIR + "/.Xresources-regolith", "w") as xres_file:
             xres_file.write(
                 '#include "/home/' + user_name + '/.regowal/styles/regowaltheme/root"\n'
             )
     except:
         print("Could not write Xresources-regolith file")
 
+
 print(
     """
 Converting regowal.py to regowal and making it executable
 """
 )
-
 # making regowal executable
 subprocess.call(["cp", "regowal.py", "regowal"])
 subprocess.call(["chmod", "+x", "regowal"])
 
+# adding regowal to a known path variable
+try:
+    subprocess.call(["cp", "regowal", HOME_DIR + "/.local/bin/"])
+    subprocess.call(["cp", "filecreator.py", HOME_DIR + "/.local/bin/"])
+except:
+    pass
+
 print(
     """
 ----------------------------------------------------------
-Setup complete => './regowal <wallpaper>' is ready
+Setup complete => 'regowal (optional: -light -alt) <wallpaper>' is ready
 ----------------------------------------------------------
 """
 )

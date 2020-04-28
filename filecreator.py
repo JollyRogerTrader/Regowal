@@ -1,6 +1,6 @@
-import subprocess, os, re
+import subprocess, os
 
-# This is just a collection of functions to write file using a template system.
+# This is just a collection of functions to write files using a template system.
 # Do not edit this unless you are careful with how the file is formated when it is written
 
 user_name = os.environ.get("USER")
@@ -26,7 +26,6 @@ def write_color_file(
     cg="#A3BE8C",
 ):
     with open(dir + "color", "w") as color_file:
-        print("Creating color")
         color_file_data = (
             """#define color_base03   """
             + c03
@@ -83,7 +82,6 @@ def write_color_file(
 
 def write_typeface_file(dir):
     with open(dir + "typeface", "w") as typeface_file:
-        print("Creating typeface")
         typeface_file_data = """
 ! Typeface: Source Code Pro
 #define typeface_bar_glyph  Source Code Pro Medium 13
@@ -133,7 +131,6 @@ def write_typeface_file(dir):
 
 def write_theme_file(dir):
     with open(dir + "theme", "w") as theme_file:
-        print("Creating theme")
         theme_file_data = (
             """
 #define gtk_theme           Adwaita
@@ -155,7 +152,6 @@ def write_theme_file(dir):
 
 def write_root_file(dir):
     with open(dir + "root", "w") as root_file:
-        print("Creating root")
         root_file_data = (
             """! -- Styles - Colors
 #include "/home/"""
@@ -199,7 +195,6 @@ def write_rofi_file(
     light1="#D8DEE9",
 ):
     with open(dir + "rofi.rasi", "w") as rofi_file:
-        print("Creating rofi.rasi")
         rofi_file_data = (
             """/* global settings and color variables */
 * {
