@@ -26,9 +26,7 @@ Sometimes a manual <code>regolith-look refresh</code> is needed to fully update 
 <bold>HOW TO USE</bold>
 
 <code>regowal (-light -alt) "full path to img"</code>
-<weak>-light is for light mode </weak>>
-<weak>-alt is to force alternate color generation (works better for black and white or lower color range images)
-</weak>
+
 note: you do not need to run setup.py more than once or run it if you deleted the .regowal theme from your home directory and would like to reinstall.
 
 <bold>HOW TO SWAP TO DEFUALT THEME</bold>

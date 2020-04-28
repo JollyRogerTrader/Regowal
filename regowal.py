@@ -98,7 +98,7 @@ def save_color_theme(scheme):
             "/home/" + USER_NAME + "/.regowal/styles/regowaltheme/",
             scheme[0],  # background
             scheme[15],  # i3bar main text
-            scheme[0],
+            scheme[10],
             scheme[15],  # number workspace text color
             scheme[15],  # i3bar
             scheme[15],  # i3bar
