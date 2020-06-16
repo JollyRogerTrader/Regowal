@@ -133,7 +133,7 @@ def write_theme_file(dir):
     with open(dir + "theme", "w") as theme_file:
         theme_file_data = (
             """
-#define gtk_theme           Adwaita
+#define gtk_theme           Ayu-Mirage-Dark
 #define icon_theme          Paper
 #define desktop_wallpaper   /usr/share/backgrounds/regolith-structure-7.png
 #define rofi_theme          /home/"""

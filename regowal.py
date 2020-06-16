@@ -2,6 +2,7 @@
 import os, sys, subprocess, filecreator, argparse
 from PIL import Image
 from collections import Counter
+import ayumiragetheme
 
 USER_NAME = os.environ.get("USER")
 
@@ -100,7 +101,7 @@ def save_color_theme(scheme):
             scheme[15],  # i3bar main text
             scheme[10],
             scheme[15],  # number workspace text color
-            scheme[15],  # i3bar
+            scheme[13],  # i3bar
             scheme[15],  # i3bar
             scheme[2],
             scheme[3],
@@ -125,6 +126,24 @@ def save_color_theme(scheme):
             scheme[15],  # highlighter color
             scheme[2],
             scheme[15],
+            scheme[15],
+        )
+        ayumiragetheme.write_gtk3_css(
+            scheme[3],  # new tab area
+            scheme[15],  # search bar writing
+            scheme[0],
+            scheme[5],
+            scheme[8],
+            scheme[5],
+            scheme[0],  # main background
+            scheme[13],
+            scheme[8],
+            scheme[9],
+            scheme[10],
+            scheme[11],
+            scheme[12],
+            scheme[13],
+            scheme[0],  # text views
             scheme[15],
         )
     else:

@@ -1,4 +1,4 @@
-import subprocess, os, re
+import subprocess, os
 import filecreator
 
 user_name = os.environ.get("USER")
@@ -71,12 +71,17 @@ if ans != "y":
     exit()
 try:
     print("Creating needed directories.")
-    command = subprocess.call(["mkdir", str(HOME_DIR + "/.regowal/")])
+    command = subprocess.call(
+        ["mkdir", str(HOME_DIR + "/.regowal/")], stdout=subprocess.DEVNULL
+    )
     if command == 0:
         print("Directory created at " + HOME_DIR + "/.regowal/")
-        command = subprocess.call(["mkdir", str(HOME_DIR + "/.regowal/styles/")])
         command = subprocess.call(
-            ["mkdir", str(HOME_DIR + "/.regowal/styles/regowaltheme/")]
+            ["mkdir", str(HOME_DIR + "/.regowal/styles/")], stdout=subprocess.DEVNULL
+        )
+        command = subprocess.call(
+            ["mkdir", str(HOME_DIR + "/.regowal/styles/regowaltheme/")],
+            stdout=subprocess.DEVNULL,
         )
         if command == 0:
             print("Directory created at " + HOME_DIR + "/.regowal/styles/")
@@ -117,6 +122,18 @@ else:
     except:
         print("Could not write Xresources-regolith file")
 
+print("Verifying you have needed dependancies")
+try:
+    pip3 = subprocess.call(
+        ["pip3", "install", "pillow==6.1.0"], stdout=subprocess.DEVNULL
+    )
+except subprocess.CalledProcessError as error:
+    print(error)
+
+try:
+    imagemagick = subprocess.check_call(["which", "convert"], stdout=subprocess.DEVNULL)
+except subprocess.CalledProcessError:
+    print("Imagemagick is not installed - use 'sudo apt install imagemagick'")
 
 print(
     """
@@ -131,6 +148,7 @@ subprocess.call(["chmod", "+x", "regowal"])
 try:
     subprocess.call(["cp", "regowal", HOME_DIR + "/.local/bin/"])
     subprocess.call(["cp", "filecreator.py", HOME_DIR + "/.local/bin/"])
+    subprocess.call(["cp", "ayumiragetheme.py", HOME_DIR + "/.local/bin/"])
 except:
     pass
 
