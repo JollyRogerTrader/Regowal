@@ -1,3 +1,5 @@
+***This is slightly abandoned due to some family circumstances. I'm hoping I can pick this back up again but until this message it gone - dont try this on Regolith 20.04***
+
 # Regowal
 
 Regowal is a theme generator for Regolith-linux
